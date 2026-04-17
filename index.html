@@ -1,160 +1,1461 @@
 <!DOCTYPE HTML>
-<html>
-  <head>
-    <title>Richard Xiaoxiao Tian - Portfolio</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-  </head>
-  <body class="is-preload">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XIAO'S LAB — Data & Analytics Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
 
-    <!-- Wrapper -->
-    <div id="wrapper" class="fade-in">
+  <style>
+    /* =============================================
+       DESIGN TOKENS — edit once, applied everywhere
+       ============================================= */
+    :root {
+      --bg:          #F2F2F2;
+      --black:       #000000;
+      --white:       #FFFFFF;
+      --accent-red:  #E63946;
+      --accent-blue: #1D3557;
+      --accent-gold: #FFB703;
 
-      <!-- Intro -->
-      <div id="intro">
-        <h1>Richard Xiaoxiao Tian's Portfolio</h1>
-        <p>Ambitious in data and this is my showcase of my projects and skills.</p>
-        <ul class="actions">
-          <li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
-        </ul>
+      /* ── GRID LINES ── change --border-weight to make all lines thicker/thinner */
+      --border-weight: 1.5px;
+      --border: var(--border-weight) solid var(--black);
+
+      --font-heading: 'Archivo Black', 'Inter', sans-serif;
+      --font-body:    'IBM Plex Mono', monospace;
+    }
+
+    /* =============================================
+       RESET & BASE
+       ============================================= */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--black);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* =============================================
+       PAGE TRANSITION — black curtain
+       ============================================= */
+    #curtain {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 9999;
+      transform: translateY(0);
+      transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+      pointer-events: none;
+    }
+
+    body.loaded #curtain {
+      transform: translateY(-100%);
+    }
+
+    /* =============================================
+       12-COLUMN GRID UTILITY
+       Each .col-N spans N of 12 columns.
+       ============================================= */
+    .grid-12 {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    /* =============================================
+       HERO SECTION
+       ============================================= */
+    #hero {
+      min-height: 100vh;
+      border-bottom: var(--border);
+    }
+
+    /* ── Grid lines within hero ── */
+    .hero-inner {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      min-height: 100vh;
+    }
+
+    /* Left 8 columns */
+    .hero-left {
+      grid-column: 1 / 9;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 4rem 3rem 5rem 4rem;
+      border-right: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-tag {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      color: var(--accent-red);
+    }
+
+    /* Giant oversized name — allowed to bleed off edge */
+    .hero-name {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: clamp(3rem, 7vw, 8rem);
+      letter-spacing: -0.05em;
+      line-height: 0.92;
+      margin-right: -0.1em; /* intentional bleed */
+      user-select: none;
+    }
+
+    .hero-name .line2 {
+      display: block;
+      color: var(--black);
+    }
+
+    .hero-name .line3 {
+      display: block;
+      -webkit-text-stroke: var(--border-weight) var(--black);
+      color: transparent; /* outline-only text */
+    }
+
+    .hero-sub {
+      margin-top: 2.5rem;
+      font-size: 0.85rem;
+      max-width: 42ch;
+      border-top: var(--border);
+      padding-top: 1rem;
+    }
+
+    /* ── Grid line decoration inside hero ── */
+    .hero-grid-lines {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      pointer-events: none;
+      opacity: 0.06; /* subtle background columns */
+    }
+
+    .hero-grid-lines span {
+      border-right: var(--border);
+    }
+
+    /* Right 4 columns — vertical nav */
+    .hero-right {
+      grid-column: 9 / 13;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem 2.5rem;
+    }
+
+    /* ── Bauhaus geometric mark (replaces text badge) ── */
+    .hero-badge {
+      display: inline-block;
+      line-height: 0;
+    }
+
+    .hero-badge svg {
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .hero-badge:hover svg {
+      transform: rotate(90deg);
+    }
+
+    /* Vertical nav list */
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-list li {
+      border-bottom: var(--border);
+    }
+
+    .nav-list li:first-child {
+      border-top: var(--border);
+    }
+
+    .nav-list a {
+      display: block;
+      padding: 1.4rem 0;
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s, padding-left 0.2s;
+    }
+
+    .nav-list a:hover {
+      background: var(--black);
+      color: var(--white);
+      padding-left: 0.75rem;
+    }
+
+    .hero-coords {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      opacity: 0.5;
+    }
+
+    /* =============================================
+       ABOUT SECTION
+       ============================================= */
+    #about {
+      border-bottom: var(--border);
+    }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .about-label {
+      grid-column: 1 / 3;
+      border-right: var(--border);
+      padding: 4rem 2rem;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .section-label {
+      font-family: var(--font-heading);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+
+    .about-content {
+      grid-column: 3 / 10;
+      padding: 4rem 3rem;
+      border-right: var(--border);
+    }
+
+    .about-headline {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1.05;
+      margin-bottom: 2rem;
+    }
+
+    .about-content p {
+      max-width: 60ch;
+      margin-bottom: 1rem;
+    }
+
+    .about-stats {
+      grid-column: 10 / 13;
+      padding: 4rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .stat-block {
+      padding: 1.5rem 0;
+      border-bottom: var(--border);
+    }
+
+    .stat-block:first-child {
+      border-top: var(--border);
+    }
+
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: var(--accent-red);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+      opacity: 0.6;
+    }
+
+    /* =============================================
+       SKILLS BAR
+       ============================================= */
+    .skills-bar {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      border-bottom: var(--border);
+      overflow: hidden;
+    }
+
+    .skill-cell {
+      border-right: var(--border);
+      padding: 1rem 1.5rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .skill-cell:last-child {
+      border-right: none;
+    }
+
+    .skill-cell:hover {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    /* =============================================
+       PROJECTS SECTION
+       ============================================= */
+    #projects {
+      border-bottom: var(--border);
+    }
+
+    .projects-header {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      border-bottom: var(--border);
+    }
+
+    .projects-header-label {
+      grid-column: 1 / 3;
+      border-right: var(--border);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .projects-header-title {
+      grid-column: 3 / 13;
+      padding: 2rem 3rem;
+    }
+
+    .projects-header-title h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    /* Each project row */
+    .project-row {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      border-bottom: var(--border);
+      min-height: 420px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Accent color cycling: red, blue, gold, red
+       NOTE: nth-child counts ALL siblings including div.projects-header,
+       so the first article is child 2, last is child 5. */
+    .project-row:nth-child(2) { --row-accent: var(--accent-red); }
+    .project-row:nth-child(3) { --row-accent: var(--accent-blue); }
+    .project-row:nth-child(4) { --row-accent: var(--accent-gold); }
+    .project-row:nth-child(5) { --row-accent: var(--accent-red); }
+
+    /* Left 7 columns: image */
+    .project-image {
+      grid-column: 1 / 8;
+      position: relative;
+      overflow: hidden;
+      border-right: var(--border);
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+      transition: filter 0.4s ease, transform 0.4s ease;
+    }
+
+    /* Hover: full color + zoom on image side */
+    .project-row:hover .project-image img {
+      filter: grayscale(0%);
+      transform: scale(1.04);
+    }
+
+    /* ── Color block overlay on hover ── */
+    .project-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--row-accent);
+      opacity: 0;
+      mix-blend-mode: multiply;
+      transition: opacity 0.35s ease;
+    }
+
+    .project-row:hover .project-image::after {
+      opacity: 0.25;
+    }
+
+    /* Right 5 columns: text */
+    .project-info {
+      grid-column: 8 / 13;
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background: var(--bg);
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    .project-row:hover .project-info {
+      background: var(--row-accent);
+      color: var(--white);
+    }
+
+    .project-row:hover .project-info .project-cta {
+      background: var(--white);
+      color: var(--black);
+    }
+
+    .project-row:hover .project-info .math-deco {
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* Gold (#FFB703) is too light for white text — use black text instead */
+    .project-row:nth-child(4):hover .project-info {
+      color: var(--black);
+    }
+
+    .project-row:nth-child(4):hover .project-info .project-cta {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .project-row:nth-child(4):hover .project-info .math-deco {
+      color: rgba(0,0,0,0.35);
+    }
+
+    .project-meta {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-index {
+      font-family: var(--font-heading);
+      font-size: 5rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      opacity: 0.1;
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+    }
+
+    .project-date {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: var(--border-weight) solid currentColor;
+      padding: 0.25rem 0.6rem;
+      display: inline-block;
+    }
+
+    .project-status {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    .project-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .project-desc {
+      font-size: 0.8rem;
+      line-height: 1.7;
+      max-width: 35ch;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Decorative math characters */
+    .math-deco {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      color: #999;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.5rem;
+      transition: color 0.35s;
+    }
+
+    /* CTA button — pure black square */
+    .project-cta {
+      display: inline-block;
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.9rem 1.6rem;
+      border: var(--border-weight) solid transparent;
+      cursor: pointer;
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+      align-self: flex-start;
+    }
+
+    .project-cta:hover {
+      background: transparent;
+      color: var(--black);
+      border-color: var(--black);
+    }
+
+    .project-row:hover .project-info .project-cta:hover {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    /* =============================================
+       CV SECTION
+       ============================================= */
+    #cv {
+      border-bottom: var(--border);
+    }
+
+    .cv-inner {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .cv-label-col {
+      grid-column: 1 / 3;
+      border-right: var(--border);
+      padding: 4rem 2rem;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .cv-content {
+      grid-column: 3 / 13;
+      padding: 4rem 3rem;
+    }
+
+    .cv-headline {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 5vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      margin-bottom: 3rem;
+    }
+
+    .cv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+
+    .cv-block {
+      border-right: var(--border);
+      padding: 2rem 2rem 2rem 0;
+    }
+
+    .cv-block:last-child {
+      border-right: none;
+      padding-right: 0;
+      padding-left: 2rem;
+    }
+
+    .cv-block:nth-child(2) {
+      padding-left: 2rem;
+    }
+
+    .cv-block-label {
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      border-bottom: var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .cv-entry {
+      margin-bottom: 1.5rem;
+    }
+
+    .cv-entry-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .cv-entry-sub {
+      font-size: 0.85rem;
+      opacity: 0.6;
+      margin-bottom: 0.2rem;
+    }
+
+    .cv-entry-date {
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-red);
+    }
+
+    .cv-download {
+      display: inline-block;
+      margin-top: 2rem;
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 1rem 2rem;
+      border: var(--border-weight) solid transparent;
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+    }
+
+    .cv-download:hover {
+      background: transparent;
+      color: var(--black);
+      border-color: var(--black);
+    }
+
+    /* =============================================
+       CONTACT SECTION
+       ============================================= */
+    #contact {
+      border-bottom: var(--border);
+    }
+
+    .contact-inner {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .contact-label-col {
+      grid-column: 1 / 3;
+      border-right: var(--border);
+      padding: 4rem 2rem;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .contact-big {
+      grid-column: 3 / 13;
+      padding: 4rem 3rem;
+    }
+
+    .contact-big h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(3rem, 8vw, 8rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.92;
+      margin-bottom: 3rem;
+    }
+
+    .contact-big h2 span {
+      display: block;
+      -webkit-text-stroke: var(--border-weight) var(--black);
+      color: transparent;
+    }
+
+    .contact-links {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: var(--border);
+    }
+
+    .contact-link-item {
+      padding: 2rem 0;
+      border-right: var(--border);
+    }
+
+    .contact-link-item:last-child {
+      border-right: none;
+      padding-left: 2rem;
+    }
+
+    .contact-link-item:nth-child(2) {
+      padding-left: 2rem;
+    }
+
+    .contact-link-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      opacity: 0.5;
+    }
+
+    .contact-link-value {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      transition: color 0.2s;
+    }
+
+    .contact-link-item:hover .contact-link-value {
+      color: var(--accent-red);
+    }
+
+    /* =============================================
+       FOOTER
+       ============================================= */
+    footer {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      border-top: var(--border);
+    }
+
+    /* ── Giant grid-line backdrop in footer ── */
+    .footer-bg {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer-bg-col {
+      height: 80px;
+      border-right: var(--border);
+      opacity: 0.15;
+    }
+
+    .footer-left {
+      grid-column: 1 / 7;
+      padding: 2.5rem 3rem 2.5rem 4rem;
+      border-right: var(--border);
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .footer-social-link {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-bottom: var(--border-weight) solid transparent;
+      padding-bottom: 2px;
+      transition: border-color 0.2s;
+    }
+
+    .footer-social-link:hover {
+      border-color: var(--black);
+    }
+
+    .footer-right {
+      grid-column: 7 / 13;
+      padding: 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #live-clock {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .footer-copy {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      text-align: right;
+    }
+
+    /* =============================================
+       SCROLL REVEAL
+       ============================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =============================================
+       RESPONSIVE — stack to vertical on mobile
+       ============================================= */
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-left {
+        grid-column: 1;
+        border-right: none;
+        border-bottom: var(--border);
+        padding: 3rem 1.5rem 2.5rem;
+      }
+
+      .hero-right {
+        grid-column: 1;
+        padding: 2rem 1.5rem;
+      }
+
+      .nav-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .nav-list li {
+        border-bottom: none;
+        border-right: var(--border);
+      }
+
+      .nav-list li:first-child {
+        border-top: none;
+      }
+
+      .nav-list a {
+        padding: 0.75rem 1rem;
+      }
+
+      .about-inner,
+      .cv-inner,
+      .contact-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .about-label,
+      .cv-label-col,
+      .contact-label-col {
+        grid-column: 1;
+        border-right: none;
+        border-bottom: var(--border);
+        padding: 1.5rem 1.5rem;
+      }
+
+      .section-label {
+        writing-mode: horizontal-tb;
+        transform: none;
+      }
+
+      .about-content,
+      .cv-content,
+      .contact-big {
+        grid-column: 1;
+        padding: 2rem 1.5rem;
+      }
+
+      .about-stats {
+        grid-column: 1;
+        padding: 2rem 1.5rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .stat-block {
+        flex: 1 1 50%;
+      }
+
+      .skills-bar {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .projects-header {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-header-label { grid-column: 1; border-right: none; border-bottom: var(--border); }
+      .projects-header-title { grid-column: 1; padding: 1.5rem; }
+
+      .project-row {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .project-image {
+        grid-column: 1;
+        border-right: none;
+        border-bottom: var(--border);
+        height: 260px;
+      }
+
+      .project-info {
+        grid-column: 1;
+        padding: 2rem 1.5rem;
+      }
+
+      .cv-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cv-block {
+        border-right: none;
+        border-bottom: var(--border);
+        padding: 1.5rem 0;
+      }
+
+      .cv-block:last-child {
+        padding-left: 0;
+      }
+
+      .contact-big h2 {
+        font-size: clamp(2.5rem, 10vw, 5rem);
+      }
+
+      .contact-links {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-link-item {
+        border-right: none;
+        border-bottom: var(--border);
+        padding-left: 0 !important;
+      }
+
+      footer {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-left {
+        grid-column: 1;
+        border-right: none;
+        border-bottom: var(--border);
+        padding: 2rem 1.5rem;
+      }
+
+      .footer-right {
+        grid-column: 1;
+        padding: 2rem 1.5rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .footer-bg {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page transition curtain -->
+  <div id="curtain"></div>
+
+  <!-- ==========================================
+       HERO
+       ========================================== -->
+  <section id="hero">
+    <div class="hero-inner">
+
+      <!-- Left 8 col -->
+      <div class="hero-left">
+        <!-- Subtle background column grid lines -->
+        <div class="hero-grid-lines" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+
+        <span class="hero-tag">Data · Analytics · Machine Learning</span>
+
+        <h1 class="hero-name">
+          <span class="line2">XIAOXIAO</span>
+          <span class="line2">TIAN'S</span>
+          <span class="line3">PORTFOLIO</span>
+        </h1>
+
+        <p class="hero-sub">
+          6 years · Data Science · AI · Research · Project Management
+        </p>
       </div>
 
-      <!-- Header -->
-      <header id="header"></header>
+      <!-- Right 4 col -->
+      <div class="hero-right">
+        <!-- Bauhaus geometric mark: circle + square + triangle in primary colors -->
+        <div class="hero-badge" aria-label="Bauhaus geometric mark">
+          <svg width="82" height="82" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer frame -->
+            <rect x="1" y="1" width="80" height="80" stroke="#000" stroke-width="1.5"/>
+            <!-- Cross grid lines — divides canvas into 4 quadrants -->
+            <line x1="1"  y1="41" x2="81" y2="41" stroke="#000" stroke-width="1.5"/>
+            <line x1="41" y1="1"  x2="41" y2="81" stroke="#000" stroke-width="1.5"/>
+            <!-- Red circle — upper-left quadrant, bleeds into centre -->
+            <circle cx="27" cy="27" r="20" fill="#E63946"/>
+            <!-- Blue rectangle — lower-left quadrant -->
+            <rect x="5" y="45" width="32" height="32" fill="#1D3557"/>
+            <!-- Yellow right-triangle — lower-right quadrant -->
+            <polygon points="45,81 81,81 81,45" fill="#FFB703"/>
+            <!-- Small black circle — upper-right, accent dot -->
+            <circle cx="62" cy="20" r="7" fill="#000"/>
+          </svg>
+        </div>
 
-      <!-- Nav -->
-      <nav id="nav">
-        <ul class="links">
-          <li class="active"><a href="index.html">Portfolio</a></li>
-        </ul>
-        <ul class="icons">
-          <li><a href="https://www.linkedin.com/in/xiaoxiao-tian/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
-          <li><a href="https://github.com/oaixx/" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-        </ul>
-      </nav>
+        <nav>
+          <ul class="nav-list">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#cv">CV</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
 
-      <!-- Main -->
-      <div id="main">
-
-        <!-- Featured Post -->
-        <article class="post featured">
-          <header class="major">
-            <h2><a href="#">I explore data-driven products to support active decision making!</a></h2>
-            <p>
-              5 years of research, consulting, and industry experience in data
-              analytics, data science, operations simulation, and machine learning
-              with applications in e-commerce, supply chain, 5G, AI,
-              Telecommunication, and strategy.
-              <br /><br />
-              Passionate about applying data analytics & machine learning
-              developing informative data visualizations to create innovative
-              decision-support products.
-            </p>
-          </header>
-        </article>
-
-        <section class="posts">
-          <article>
-            <header>
-              <span class="date">May, 2024</span>
-              <h2><a href="https://github.com/oaixx/Descriptive-statistics-and-clustering-algorithm-for-an-e-commerce-data-set">Descriptive statistics and clustering algorithm for an E-commerce dataset</a></h2>
-            </header>
-            <a href="https://github.com/oaixx/Descriptive-statistics-and-clustering-algorithm-for-an-e-commerce-data-set" class="image fit"><img src="images/EDA.jfif" alt="Precision Marketing" /></a>
-            <p>This project aims to demonstrate the use of Python for exploring data analysis and leveraging data analysis models and clustering methods to gain valuable insights.</p>
-            <ul class="actions special">
-              <li><a href="https://github.com/oaixx/Descriptive-statistics-and-clustering-algorithm-for-an-e-commerce-data-set" class="button">Full Story</a></li>
-            </ul>
-          </article>
-
-          <article>
-            <header>
-              <span class="date">April, 2024</span>
-              <h2><a href="https://github.com/oaixx/Data-Forecasting-By-Using-Time-Series-Analysis/tree/main">(ON THE WAY...)Sales forecasting by using Time Series Analysis</a></h2>
-            </header>
-            <a href="https://github.com/oaixx/Data-Forecasting-By-Using-Time-Series-Analysis/tree/main" class="image fit"><img src="images/prediction.jpg" alt="Sales Forecasting" /></a>
-            <p>
-              Using time series analysis to forecast sales trends and improve decision-making processes in the business environment.
-            </p>
-            <ul class="actions special">
-              <li><a href="https://github.com/oaixx/Data-Forecasting-By-Using-Time-Series-Analysis/tree/main" class="button">Full Story</a></li>
-            </ul>
-          </article>
-
-          <article>
-            <header>
-              <span class="date">April, 2024</span>
-              <h2><a href="https://github.com/oaixx/-A-E-commerce-Analysis-by-using-MySQL">An E-Commerce Analysis in MySQL</a></h2>
-            </header>
-            <a href="https://github.com/oaixx/-A-E-commerce-Analysis-by-using-MySQL" class="image fit"><img src="images/SQL.jpg" alt="E-Commerce Analysis" /></a>
-            <p>
-              This case uses MySQL to clean and analyze user behavior and purchasing paths from an e-commerce platform dataset provided by Kaggle, aiming to optimize conversion rates, identify popular products, and conduct user and RFM analysis.
-            </p>
-            <ul class="actions special">
-              <li><a href="https://github.com/oaixx/-A-E-commerce-Analysis-by-using-MySQL" class="button">Full Story</a></li>
-            </ul>
-          </article>
-
-          <article>
-            <header>
-              <span class="date">March, 2022</span>
-              <h2><a href="https://github.com/oaixx/xiao.github.io">An NLP-based Text Analysis</a></h2>
-            </header>
-            <a href="https://github.com/oaixx/xiao.github.io" class="image fit"><img src="images/nlp.jpg" alt="NLP Analysis" /></a>
-            <p>
-              A case to illustrate the application of NLP in enhancing policy analysis by using text analysis to examine policy documents, thereby achieving both qualitative and quantitative analysis.
-            </p>
-            <ul class="actions special">
-              <li><a href="https://github.com/oaixx/xiao.github.io" class="button">Full Story</a></li>
-            </ul>
-          </article>
-        </section>
+        <span class="hero-coords">49.2827° N, 123.1207° W — Vancouver</span>
       </div>
 
-      <!-- Footer -->
-      <footer id="footer">
-        <section class="split contact">
-          <section class="alt">
-            <h3>Address</h3>
-            <p>Vancouver, BC, Canada</p>
-          </section>
-          <section>
-            <h3>Phone</h3>
-            <p><a href="tel:+17786680702">(778) 668-0702</a></p>
-          </section>
-          <section>
-            <h3>Email</h3>
-            <p><a href="mailto:tianxiaoxiao666@gmail.com">tianxiaoxiao666@gmail.com</a></p>
-          </section>
-          <section>
-            <h3>Social</h3>
-            <ul class="icons alt">
-              <li><a href="https://github.com/oaixx" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-              <li><a href="https://www.linkedin.com/in/xiaoxiao-tian/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
-            </ul>
-          </section>
-        </section>
-      </footer>
+    </div>
+  </section>
 
-      <!-- Copyright -->
-      <div id="copyright">
-        <ul>
-          <li>&copy; Richard Xiaoxiao Tian</li>
-          <li>TEL: <a href="tel:+17786680702">(778) 668-0702</a></li>
-          <li>EMAIL: <a href="mailto:tianxiaoxiao666@gmail.com">TIANXIAOXIAO666@GMAIL.COM</a></li>
-        </ul>
+  <!-- ==========================================
+       SKILLS TICKER BAR
+       ========================================== -->
+  <div class="skills-bar" aria-label="Skills">
+    <div class="skill-cell">Python</div>
+    <div class="skill-cell">SQL / MySQL</div>
+    <div class="skill-cell">R</div>
+    <div class="skill-cell">Tableau</div>
+    <div class="skill-cell">Power BI</div>
+    <div class="skill-cell">TensorFlow</div>
+    <div class="skill-cell">NLP</div>
+    <div class="skill-cell">Time Series</div>
+    <div class="skill-cell">ML Pipelines</div>
+    <div class="skill-cell">A/B Testing</div>
+    <div class="skill-cell">Statistics</div>
+    <div class="skill-cell">Excel</div>
+  </div>
+
+  <!-- ==========================================
+       ABOUT
+       ========================================== -->
+  <section id="about">
+    <div class="about-inner">
+
+      <div class="about-label">
+        <span class="section-label">About</span>
+      </div>
+
+      <div class="about-content reveal">
+        <h2 class="about-headline">
+          Data turns noise<br />into decisions.
+        </h2>
+        <p>I'm Xiaoxiao Tian.<br />Data Scientist &amp; Analytics Engineer.</p>
+        <p>
+          I architect scalable data ecosystems and lead cross-functional projects
+          from raw ingestion to strategic insight.
+        </p>
+        <p>Where rigorous engineering meets artistic data storytelling.</p>
+      </div>
+
+      <div class="about-stats reveal">
+        <div class="stat-block">
+          <div class="stat-number">5+</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">8+</div>
+          <div class="stat-label">Projects Shipped</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Industry Domains</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">Curiosity</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PROJECTS
+       ========================================== -->
+  <section id="projects">
+
+    <div class="projects-header">
+      <div class="projects-header-label">
+        <span class="section-label">Work</span>
+      </div>
+      <div class="projects-header-title">
+        <h2>Selected Projects</h2>
       </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.scrollex.min.js"></script>
-    <script src="assets/js/jquery.scrolly.min.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
+    <!-- Project 01 -->
+    <article class="project-row reveal">
+      <div class="project-image">
+        <!-- Replace src with a geometric/industrial AI-generated image -->
+        <img
+          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80"
+          alt="E-Commerce Analysis — data analytics dashboard"
+        />
+      </div>
+      <div class="project-info">
+        <span class="project-index" aria-hidden="true">01</span>
+        <div>
+          <div class="project-meta">
+            <span class="project-date">Apr 2024</span>
+            <span class="project-status">Complete</span>
+          </div>
+          <h3 class="project-title">E-Commerce Analysis<br />in MySQL</h3>
+          <p class="project-desc">
+            Cleaned and analysed user behavior and purchasing paths from a Kaggle
+            e-commerce dataset. Outputs: conversion funnel, RFM segmentation,
+            popular-product ranking.
+          </p>
+          <!-- Decorative math characters -->
+          <div class="math-deco" aria-hidden="true">
+            ∇ RFM · Σ CLV · ℝⁿ · P(buy | view)
+          </div>
+        </div>
+        <a
+          class="project-cta"
+          href="https://github.com/oaixx/-A-E-commerce-Analysis-by-using-MySQL"
+          target="_blank"
+          rel="noopener noreferrer"
+        >View Case →</a>
+      </div>
+    </article>
 
-  </body>
+    <!-- Project 02 -->
+    <article class="project-row reveal">
+      <div class="project-image">
+        <img
+          src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=900&q=80"
+          alt="NLP Text Analysis — matrix code stream"
+        />
+      </div>
+      <div class="project-info">
+        <span class="project-index" aria-hidden="true">02</span>
+        <div>
+          <div class="project-meta">
+            <span class="project-date">Mar 2022</span>
+            <span class="project-status">Complete</span>
+          </div>
+          <h3 class="project-title">NLP-Based<br />Text Analysis</h3>
+          <p class="project-desc">
+            Applied NLP to policy documents — qualitative structure meets quantitative
+            scoring. Topic modeling + sentiment + keyword co-occurrence graph.
+          </p>
+          <div class="math-deco" aria-hidden="true">
+            TF-IDF · cos(θ) · BERT · p(topic | doc)
+          </div>
+        </div>
+        <a
+          class="project-cta"
+          href="https://github.com/oaixx/xiao.github.io"
+          target="_blank"
+          rel="noopener noreferrer"
+        >View Case →</a>
+      </div>
+    </article>
+
+    <!-- Project 03 -->
+    <article class="project-row reveal">
+      <div class="project-image">
+        <img
+          src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=80"
+          alt="Sales Forecasting — financial data charts on laptop"
+        />
+      </div>
+      <div class="project-info">
+        <span class="project-index" aria-hidden="true">03</span>
+        <div>
+          <div class="project-meta">
+            <span class="project-date">Apr 2024</span>
+            <span class="project-status">In Progress</span>
+          </div>
+          <h3 class="project-title">Sales Forecasting<br />Time Series</h3>
+          <p class="project-desc">
+            ARIMA / Prophet / LSTM ensemble to forecast retail sales. Objective:
+            reduce forecast error and improve inventory allocation decisions.
+          </p>
+          <div class="math-deco" aria-hidden="true">
+            ARIMA(p,d,q) · ŷ_{t+h} · MSE · Σ residuals²
+          </div>
+        </div>
+        <a class="project-cta" href="#" aria-disabled="true">In Progress</a>
+      </div>
+    </article>
+
+    <!-- Project 04 -->
+    <article class="project-row reveal">
+      <div class="project-image">
+        <img
+          src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&q=80"
+          alt="Precision Marketing ML — AI neural network visualization"
+        />
+      </div>
+      <div class="project-info">
+        <span class="project-index" aria-hidden="true">04</span>
+        <div>
+          <div class="project-meta">
+            <span class="project-date">May 2021</span>
+            <span class="project-status">In Progress</span>
+          </div>
+          <h3 class="project-title">Precision Marketing<br />ML Project</h3>
+          <p class="project-desc">
+            Clustering + propensity modeling for targeted campaign allocation.
+            K-Means segmentation, XGBoost uplift model, A/B test evaluation.
+          </p>
+          <div class="math-deco" aria-hidden="true">
+            K-Means · AUC · ΔP(convert) · F₁
+          </div>
+        </div>
+        <a class="project-cta" href="#" aria-disabled="true">In Progress</a>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ==========================================
+       CV
+       ========================================== -->
+  <section id="cv">
+    <div class="cv-inner">
+
+      <div class="cv-label-col">
+        <span class="section-label">CV</span>
+      </div>
+
+      <div class="cv-content reveal">
+        <h2 class="cv-headline">Résumé</h2>
+
+        <div class="cv-grid">
+          <!-- Education -->
+          <div class="cv-block">
+            <div class="cv-block-label">Education</div>
+            <div class="cv-entry">
+              <div class="cv-entry-title">M.Sc. Data Analytics</div>
+              <div class="cv-entry-sub">University of British Columbia</div>
+              <div class="cv-entry-date">2022 – 2024</div>
+            </div>
+            <div class="cv-entry">
+              <div class="cv-entry-title">B.Eng. Information Systems</div>
+              <div class="cv-entry-sub">— </div>
+              <div class="cv-entry-date">2017 – 2021</div>
+            </div>
+          </div>
+
+          <!-- Experience -->
+          <div class="cv-block">
+            <div class="cv-block-label">Experience</div>
+            <div class="cv-entry">
+              <div class="cv-entry-title">Data Analyst</div>
+              <div class="cv-entry-sub">Industry / Consulting</div>
+              <div class="cv-entry-date">2021 – Present</div>
+            </div>
+            <div class="cv-entry">
+              <div class="cv-entry-title">Research Assistant</div>
+              <div class="cv-entry-sub">Operations & ML Research</div>
+              <div class="cv-entry-date">2020 – 2022</div>
+            </div>
+          </div>
+
+          <!-- Tools -->
+          <div class="cv-block">
+            <div class="cv-block-label">Core Tools</div>
+            <div class="cv-entry">
+              <div class="cv-entry-title">Python · SQL · R</div>
+              <div class="cv-entry-sub">Statistical modeling & engineering</div>
+            </div>
+            <div class="cv-entry">
+              <div class="cv-entry-title">Tableau · Power BI</div>
+              <div class="cv-entry-sub">Visual storytelling</div>
+            </div>
+            <div class="cv-entry">
+              <div class="cv-entry-title">TensorFlow · PyTorch</div>
+              <div class="cv-entry-sub">Deep learning pipelines</div>
+            </div>
+          </div>
+        </div>
+
+        <a class="cv-download" href="#" aria-label="Download CV PDF">Download CV (PDF) →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       CONTACT
+       ========================================== -->
+  <section id="contact">
+    <div class="contact-inner">
+
+      <div class="contact-label-col">
+        <span class="section-label">Contact</span>
+      </div>
+
+      <div class="contact-big reveal">
+        <h2>
+          Let's<br />
+          <span>Work.</span>
+        </h2>
+
+        <div class="contact-links">
+          <div class="contact-link-item">
+            <div class="contact-link-label">Email</div>
+            <a href="mailto:tianxiaoxiao666@gmail.com" class="contact-link-value">
+              tianxiaoxiao666<br />@gmail.com
+            </a>
+          </div>
+          <div class="contact-link-item">
+            <div class="contact-link-label">LinkedIn</div>
+            <a
+              href="https://www.linkedin.com/in/xiaoxiao-tian/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contact-link-value"
+            >
+              xiaoxiao-tian
+            </a>
+          </div>
+          <div class="contact-link-item">
+            <div class="contact-link-label">GitHub</div>
+            <a
+              href="https://github.com/oaixx"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contact-link-value"
+            >
+              github.com/oaixx
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer>
+    <!-- Decorative column grid lines backdrop -->
+    <div class="footer-bg" aria-hidden="true">
+      <div class="footer-bg-col"></div><div class="footer-bg-col"></div>
+      <div class="footer-bg-col"></div><div class="footer-bg-col"></div>
+      <div class="footer-bg-col"></div><div class="footer-bg-col"></div>
+      <div class="footer-bg-col"></div><div class="footer-bg-col"></div>
+      <div class="footer-bg-col"></div><div class="footer-bg-col"></div>
+      <div class="footer-bg-col"></div><div class="footer-bg-col"></div>
+    </div>
+
+    <div class="footer-left">
+      <a class="footer-social-link"
+         href="https://github.com/oaixx"
+         target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a class="footer-social-link"
+         href="https://www.linkedin.com/in/xiaoxiao-tian/"
+         target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a class="footer-social-link"
+         href="mailto:tianxiaoxiao666@gmail.com">Email</a>
+    </div>
+
+    <div class="footer-right">
+      <div id="live-clock">00:00:00</div>
+      <div class="footer-copy">
+        © 2025 Xiaoxiao Tian<br />
+        Vancouver, BC, Canada
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       JAVASCRIPT
+       ========================================== -->
+  <script>
+    /* ── Page curtain lift ── */
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+    });
+
+    /* ── Live clock ── */
+    const clockEl = document.getElementById('live-clock');
+    function tick() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      clockEl.textContent = `${hh}:${mm}:${ss}`;
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    /* ── Scroll reveal ── */
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    /* ── Smooth scroll for nav links ── */
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+
+</body>
 </html>
